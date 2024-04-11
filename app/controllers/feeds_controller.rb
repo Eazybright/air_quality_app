@@ -1,18 +1,18 @@
 require 'waqi'
 
 class FeedsController < ApplicationController
-
-
-    def initialize
-        @waqi_client = Waqi::Client::new(api_key: '')
+    before_action :set_client
+   
+    def index
+        @city = request.query_parameters['city']
+        if !@city.blank?
+            @feeds = @waqi_client.get_city_feed(@city)
+        end
     end
-  def index
-    # @feeds = @waqi_client.get_city_feed('beijing')
-    # @is_waqi = $LOADED_FEATURES # loaded?('waqi-ruby')
-  end
 
-  def loaded?(name)
-    r = Regexp.new("#{name}.rb$")
-    $LOADED_FEATURES.select{|t| t.match(r) }.any?
-  end
+    private 
+    
+    def set_client
+        @waqi_client = Waqi::Client::new(api_key: Rails.application.credentials[:air_quality_data_token])
+    end
 end

@@ -17,9 +17,29 @@
     </div>
 <% end %>
 
+<% if @isError %>
+    <div class="m-4 p-2 text-red-500">
+        <span>Error: <%= @response["data"] %></span>
+    </div>
+<% else %>
 
-<div class="text-center">
-    <p><%= @feeds %></p>
+    <div class="text-center grid grid-flow-row-dense grid-cols-4 grid-rows-4">
 
-    <p><%= @key %></p>
-</div>
+        <p><span class="font-black">City: </span> <%= @city_info["name"] %></p>
+        <p><span class="font-black">Latitude: </span><%= @city_info["geo"][0] %></p>
+        <p><span class="font-black">Longitude: </span><%= @city_info["geo"][1] %></p>
+
+        <% if !@iaqi.blank? %>
+            <% @iaqi.each do |iaqi|  %>
+                <% extra = determineLabel(iaqi["name"]).to_h %>
+                <p><span class="font-black"><%= extra["label"] %>: </span><%= iaqi["value"] %> <%= extra["unit"] %></p>
+            <% end %>
+        <% end %>
+    </div>
+                
+    <div class="text-center">
+        <h3> Daily forecast for Ozone, Particulate Matter 10 and 25</h3>
+        <div id="line_top_x" style="margin-right: auto;margin-left: auto;display: table;" data-forecast="<%= @daily_forecast %>"></div>
+    </div>
+
+<% end %>
